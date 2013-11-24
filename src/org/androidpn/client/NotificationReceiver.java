@@ -46,6 +46,9 @@ public final class NotificationReceiver extends BroadcastReceiver {
         String action = intent.getAction();
         Log.e("test", "action=" + action);
 
+        
+        
+         //NotificationPacketListener  发送了ACTION_SHOW_NOTIFICATION
         if (Constants.ACTION_SHOW_NOTIFICATION.equals(action)) {
             String notificationId = intent
                     .getStringExtra(Constants.NOTIFICATION_ID);
@@ -65,6 +68,7 @@ public final class NotificationReceiver extends BroadcastReceiver {
             Log.e("test", "notificationUri=" + notificationUri);
 
             Notifier notifier = new Notifier(context);
+        	Log.e("test", "我的notifier是空吗"+notifier);
             notifier.notify(notificationId, notificationApiKey,
                     notificationTitle, notificationMessage, notificationUri);
         }

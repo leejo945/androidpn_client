@@ -211,6 +211,8 @@ public class NotificationService extends Service {
     }
 
     private void registerNotificationReceiver() {
+    	
+    	//这里动态注册Notification广播
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.ACTION_SHOW_NOTIFICATION);
         filter.addAction(Constants.ACTION_NOTIFICATION_CLICKED);

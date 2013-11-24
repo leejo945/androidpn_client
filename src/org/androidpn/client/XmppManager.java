@@ -97,6 +97,8 @@ public class XmppManager {
 		password = sharedPrefs.getString(Constants.XMPP_PASSWORD, "");
 
 		connectionListener = new PersistentConnectionListener(this);
+		
+		
 		notificationPacketListener = new NotificationPacketListener(this);
 
 		handler = new Handler();
@@ -280,6 +282,10 @@ public class XmppManager {
 
 	/**
 	 * A runnable task to connect the server.
+	 * 
+	 *  观察整个项目，只有后整个地方有有一个连接网络的结构，以就是说。在整个应用中只基本上只要连接网络异常就ok.   在连接以后就保存整个连接。
+	 *  以便下面的注册，登录。推送等等
+	 *  
 	 */
 	private class ConnectTask implements Runnable {
 

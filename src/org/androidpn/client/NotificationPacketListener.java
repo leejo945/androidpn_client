@@ -28,8 +28,7 @@ import android.util.Log;
  */
 public class NotificationPacketListener implements PacketListener {
 
-    private static final String LOGTAG = LogUtil
-            .makeLogTag(NotificationPacketListener.class);
+    private static final String LOGTAG = "NotificationPacketListener";
 
     private final XmppManager xmppManager;
 
@@ -39,9 +38,11 @@ public class NotificationPacketListener implements PacketListener {
 
     @Override
     public void processPacket(Packet packet) {
+    	 
+    	
         Log.d(LOGTAG, "NotificationPacketListener.processPacket()...");
         Log.d(LOGTAG, "packet.toXML()=" + packet.toXML());
-
+        Log.d(LOGTAG, "packet.toString()=" + packet.toString());
         if (packet instanceof NotificationIQ) {
             NotificationIQ notification = (NotificationIQ) packet;
 
@@ -53,7 +54,15 @@ public class NotificationPacketListener implements PacketListener {
                 String notificationMessage = notification.getMessage();
                 //                String notificationTicker = notification.getTicker();
                 String notificationUri = notification.getUri();
-
+                
+                Log.e(LOGTAG, "----------------------");
+     Log.e(LOGTAG, notificationId);
+     Log.e(LOGTAG, notificationApiKey);     
+     Log.e(LOGTAG, notificationTitle);          
+     Log.e(LOGTAG, notificationMessage);        
+     Log.e(LOGTAG, "notificationUri"+notificationUri);     
+                
+     Log.e(LOGTAG, "----------------------");   
                 Intent intent = new Intent(Constants.ACTION_SHOW_NOTIFICATION);
                 intent.putExtra(Constants.NOTIFICATION_ID, notificationId);
                 intent.putExtra(Constants.NOTIFICATION_API_KEY,

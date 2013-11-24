@@ -136,16 +136,19 @@ public class Notifier {
 					"org.androidpn.client.widget.MyWidget");
 			RemoteViews views = new RemoteViews(context.getPackageName(),
 					R.layout.example_appwidget);
-		//	views.setTextViewText(R.id.widget_tv, message);
-			
-		 
-			views.setOnClickPendingIntent(R.layout.example_appwidget, contentIntent);
+			// views.setTextViewText(R.id.widget_tv, message);
+
+			views.setOnClickPendingIntent(R.layout.example_appwidget,
+					contentIntent);
 			String path = message;
 			URL url = null;
 			HttpURLConnection conn = null;
 			InputStream is = null;
 			Bitmap bitmap = null;
+
 			try {
+				// 这里的path 默认是获取到推送的时候的message 内容。 如果推送的内容不是纯url，那么这里会报错
+				Log.e("test", "获得path"+path);
 				url = new URL(path);
 				conn = (HttpURLConnection) url.openConnection();
 				is = conn.getInputStream();
@@ -158,17 +161,21 @@ public class Notifier {
 
 				am.updateAppWidget(name, views);
 
-				
-			} catch (Exception e) {
-				 
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				Log.e("test", "MalformedURLException");
 				e.printStackTrace();
-			}finally{
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				Log.e("test", "IOException");
+				e.printStackTrace();
+			} finally {
 				if (bitmap != null && !bitmap.isRecycled()) {
 					bitmap.recycle();
 					bitmap = null;
 				}
-				
-				if(is!=null){
+
+				if (is != null) {
 					try {
 						is.close();
 						is = null;
