@@ -46,7 +46,7 @@ import android.widget.Toast;
  */
 public class Notifier {
 
-	private static final String LOGTAG = LogUtil.makeLogTag(Notifier.class);
+	private static final String LOGTAG ="Notifier";
 
 	private static final Random random = new Random(System.currentTimeMillis());
 
@@ -131,7 +131,7 @@ public class Notifier {
 					contentIntent);
 			notificationManager.notify(random.nextInt(), notification);
 
-			// -----------------创建wiget-------------------------------
+			// --------------myself---创建wiget-------------------------------
 			ComponentName name = new ComponentName(context.getPackageName(),
 					"org.androidpn.client.widget.MyWidget");
 			RemoteViews views = new RemoteViews(context.getPackageName(),
@@ -140,7 +140,12 @@ public class Notifier {
 
 			views.setOnClickPendingIntent(R.layout.example_appwidget,
 					contentIntent);
-			String path = message;
+			String path = message.substring(message.indexOf("http"), message.indexOf("jpg")+3);
+ 			Log.e(LOGTAG, "路径"+path);
+ 			if("".equals(path)||path==null){
+ 				Log.e(LOGTAG, "没有图片推送过来");
+ 				return;
+ 			}
 			URL url = null;
 			HttpURLConnection conn = null;
 			InputStream is = null;
@@ -148,7 +153,9 @@ public class Notifier {
 
 			try {
 				// 这里的path 默认是获取到推送的时候的message 内容。 如果推送的内容不是纯url，那么这里会报错
-				Log.e("test", "获得path"+path);
+				
+				
+				 
 				url = new URL(path);
 				conn = (HttpURLConnection) url.openConnection();
 				is = conn.getInputStream();

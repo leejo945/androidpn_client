@@ -310,9 +310,11 @@ public class XmppManager {
 				connConfig.setSecurityMode(SecurityMode.required);
 				connConfig.setSASLAuthenticationEnabled(false);
 				connConfig.setCompressionEnabled(false);
+				
 				XMPPConnection connection = new XMPPConnection(connConfig);
 				xmppManager.setConnection(connection);
 				try {
+					
 					// Connect to the server
 					connection.connect();
 					// packet provider
