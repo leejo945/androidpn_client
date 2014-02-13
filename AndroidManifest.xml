@@ -3,20 +3,20 @@
 	package="org.androidpn.demoapp" android:versionCode="20101028"
 	android:versionName="0.5.0">
 	<application android:icon="@drawable/icon" android:label="@string/app_name">
-		<activity android:name=".DemoAppActivity" android:label="@string/app_name">
+		<activity android:name="com.pn.demoapp.DemoAppActivity" android:label="@string/app_name">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name="org.androidpn.client.NotificationDetailsActivity"
+		<activity android:name="com.pn.client.NotificationDetailsActivity"
 			android:label="Notification Details">
 		</activity>
-		<activity android:name="org.androidpn.client.NotificationSettingsActivity"
+		<activity android:name="com.pn.client.NotificationSettingsActivity"
 			android:label="Notification Settings">
 		</activity>
 		<service android:enabled="true"
-			android:name="org.androidpn.client.NotificationService"
+			android:name="com.pn.client.NotificationService"
 			android:label="NotificationService">
 			<intent-filter>
 				<action android:name="org.androidpn.client.NotificationService" />
@@ -27,7 +27,7 @@
 			android:value="1234567890" />
 		-->
 		
-		<receiver android:name="org.androidpn.client.widget.MyWidget" >
+		<receiver android:name="com.pn.client.widget.MyWidget" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
