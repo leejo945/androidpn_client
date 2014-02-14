@@ -441,6 +441,7 @@ public class XMPPConnection extends Connection {
         }
         if (writer != null) {
             try {
+             
 		// Should already be closed by the previous
 		// socket.close(). But just in case do it explicitly.
                 writer.close();
@@ -552,7 +553,6 @@ public class XMPPConnection extends Connection {
         Log.e(LOGTAG, "第一次建立的socket"+host+"------"+port);
         try {
             if (config.getSocketFactory() == null) { 
-            	
                 this.socket = new Socket(host, port);
             }
             else {
@@ -586,6 +586,7 @@ public class XMPPConnection extends Connection {
         usingCompression = false;
 
         // Set the reader and writer instance variables
+        //通过socket获得数据流（包括输出流和输入流）
         initReaderAndWriter();
 
         try {
@@ -617,7 +618,7 @@ public class XMPPConnection extends Connection {
             connected = true;
 
             // Start keep alive process (after TLS was negotiated - if available)
-            packetWriter.startKeepAliveProcess();
+            packetWriter.startKeepAliveProcess(this.socket);
 
 
             if (isFirstInitialization) {
@@ -681,7 +682,9 @@ public class XMPPConnection extends Connection {
 
     private void initReaderAndWriter() throws XMPPException {
         try {
+        	
             if (!usingCompression) {
+            	//初始化socket产生的数据流
                 reader =
                         new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
                 writer = new BufferedWriter(
@@ -697,7 +700,7 @@ public class XMPPConnection extends Connection {
                     method.invoke(out, 2);
                     writer =
                             new BufferedWriter(new OutputStreamWriter((OutputStream) out, "UTF-8"));
-
+                    
                     Class<?> ziClass = Class.forName("com.jcraft.jzlib.ZInputStream");
                     constructor = ziClass.getConstructor(InputStream.class);
                     Object in = constructor.newInstance(socket.getInputStream());

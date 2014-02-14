@@ -91,6 +91,7 @@ public final class ServiceManager {
         editor.putString(Constants.CALLBACK_ACTIVITY_CLASS_NAME,
                 callbackActivityClassName);
         editor.commit();
+       
         // Log.i(LOGTAG, "sharedPrefs=" + sharedPrefs.toString());
     }
 

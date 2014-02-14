@@ -15,6 +15,7 @@
  */
 package com.pn.client;
 
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -300,12 +301,14 @@ public class XmppManager {
 			if (!xmppManager.isConnected()) {
 				// Create the configuration for this new connection
 				// set xmppHost and xmppPort
+				//整个项目只是在这里建立了一次连接。以后其他的数据连接只是在这个tcp连接的基础上数据传输
 				ConnectionConfiguration connConfig = new ConnectionConfiguration(
 						xmppHost, xmppPort);
+				
 				Log.e(LOGTAG, "xmppHost--" + xmppHost + "---xmppPort--"
 						+ xmppPort);
- 
-				// 配置连接网络断的信息，
+   
+				// 配置连接网络断的信息 
 				// connConfig.setSecurityMode(SecurityMode.disabled);
 				connConfig.setSecurityMode(SecurityMode.required);
 				connConfig.setSASLAuthenticationEnabled(false);
@@ -314,7 +317,7 @@ public class XmppManager {
 				XMPPConnection connection = new XMPPConnection(connConfig);
 				xmppManager.setConnection(connection);
 				try {
-					
+					 
 					// Connect to the server
 					connection.connect();
 					// packet provider

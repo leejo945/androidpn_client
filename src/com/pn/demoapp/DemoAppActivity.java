@@ -22,6 +22,8 @@ import org.androidpn.demoapp.R;
 import com.pn.client.ServiceManager;
 
 import android.app.Activity;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -39,7 +41,21 @@ public class DemoAppActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         Log.d("DemoAppActivity", "onCreate()...");
       TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-      Log.e(tag, "当前设备的唯一标示号码----"+tm.getDeviceId());
+      
+      
+      
+      
+//      WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);  
+//      WifiInfo wifiInfo = wifiManager.getConnectionInfo();  
+//      int ipAddress = wifiInfo.getIpAddress();  
+      
+  //    Log.e(tag, "当前设备的唯一标示号码----"+tm.getDeviceId()+"手机ip"+ipAddress);
+      
+      
+      
+    
+      
+      
        super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
@@ -52,9 +68,12 @@ public class DemoAppActivity extends Activity {
         });
 
         // Start the service
-        ServiceManager serviceManager = new ServiceManager(this);
-        serviceManager.setNotificationIcon(R.drawable.notification);
-        serviceManager.startService();
+        
+        	ServiceManager serviceManager = new ServiceManager(this);
+            serviceManager.setNotificationIcon(R.drawable.notification);
+            serviceManager.startService();
+      
+        
     }
 
 }

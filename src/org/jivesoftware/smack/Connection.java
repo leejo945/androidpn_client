@@ -174,7 +174,7 @@ public abstract class Connection {
     /**
      * The Writer which is used for the {@see debugger}.
      */
-    protected Writer writer;
+ protected Writer writer;
     
     /**
      * The permanent storage for the roster
