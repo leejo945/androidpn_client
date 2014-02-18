@@ -21,7 +21,7 @@ import android.util.Log;
 
 /** 
  * A listener class for monitoring changes in phone connection states. 
- *用于监听电话连接状态的改变
+ *
  * @author Sehwan Noh (devnoh@gmail.com)
  */
 public class PhoneStateChangeListener extends PhoneStateListener {
@@ -38,8 +38,8 @@ public class PhoneStateChangeListener extends PhoneStateListener {
     @Override
     public void onDataConnectionStateChanged(int state) {
         super.onDataConnectionStateChanged(state);
-        Log.d("test", "onDataConnectionStateChanged()...");
-        Log.d("test", "Data Connection State = " + getState(state));
+        Log.d(LOGTAG, "onDataConnectionStateChanged()...");
+        Log.d(LOGTAG, "Data Connection State = " + getState(state));
         
         if (state == TelephonyManager.DATA_CONNECTED) {
             notificationService.connect();

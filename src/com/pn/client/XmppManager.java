@@ -15,7 +15,6 @@
  */
 package com.pn.client;
 
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -36,7 +35,10 @@ import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Registration;
 import org.jivesoftware.smack.provider.ProviderManager;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Handler;
@@ -105,6 +107,13 @@ public class XmppManager {
 		handler = new Handler();
 		taskList = new ArrayList<Runnable>();
 		reconnection = new ReconnectionThread(this);
+		
+		//自己写的。。重新连接广播
+		
+//		MyReconnectionServerReceiver receiver = new MyReconnectionServerReceiver();
+//		IntentFilter filter = new IntentFilter("reconn");
+//		 context.registerReceiver(receiver, filter);
+		
 	}
 
 	public Context getContext() {
@@ -174,6 +183,7 @@ public class XmppManager {
 	}
 
 	public void startReconnectionThread() {
+		Log.e("xmpp", "开始重新连接 ");
 		synchronized (reconnection) {
 			if (!reconnection.isAlive()) {
 				reconnection.setName("Xmpp Reconnection Thread");
@@ -284,7 +294,7 @@ public class XmppManager {
 	/**
 	 * A runnable task to connect the server.
 	 * 
-	 *  观察整个项目，只有这个地方有有一个连接网络的结构，以就是说。在整个应用中只基本上只要连接网络一次就ok.   在连接以后就保存整个连接。
+	 *  观察整个项目，只有这个地方有有一个连接网络的结构，以就是说。在整个应用中只基本上只要连接网络一次就ok.   在连接以后就保存整个连接（当然整个app有重连机制）
 	 *  以便下面的注册，登录。推送等等
 	 *  
 	 */
@@ -301,15 +311,14 @@ public class XmppManager {
 			if (!xmppManager.isConnected()) {
 				// Create the configuration for this new connection
 				// set xmppHost and xmppPort
-				//整个项目只是在这里建立了一次连接。以后其他的数据连接只是在这个tcp连接的基础上数据传输
 				ConnectionConfiguration connConfig = new ConnectionConfiguration(
 						xmppHost, xmppPort);
-				
 				Log.e(LOGTAG, "xmppHost--" + xmppHost + "---xmppPort--"
 						+ xmppPort);
-   
-				// 配置连接网络断的信息 
+ 
+				// 配置连接网络断的信息，
 				// connConfig.setSecurityMode(SecurityMode.disabled);
+				
 				connConfig.setSecurityMode(SecurityMode.required);
 				connConfig.setSASLAuthenticationEnabled(false);
 				connConfig.setCompressionEnabled(false);
@@ -317,16 +326,17 @@ public class XmppManager {
 				XMPPConnection connection = new XMPPConnection(connConfig);
 				xmppManager.setConnection(connection);
 				try {
-					 
+					
 					// Connect to the server
 					connection.connect();
+				 
 					// packet provider
 					ProviderManager.getInstance().addIQProvider("notification",
 							"androidpn:iq:notification",
 							new NotificationIQProvider());
 
 				} catch (XMPPException e) {
-					Log.e(LOGTAG, "XMPP connection failed", e);
+					Log.e(LOGTAG, "XMPP 连接服务端失败了。。。。。", e);
 				}
 
 				xmppManager.runTask();
@@ -398,8 +408,8 @@ public class XmppManager {
 							} else if (response.getType() == IQ.Type.RESULT) {
 								xmppManager.setUsername(newUsername);
 								xmppManager.setPassword(newPassword);
-								Log.d(LOGTAG, "username=" + newUsername);
-								Log.d(LOGTAG, "password=" + newPassword);
+								Log.e(LOGTAG, "username=" + newUsername);
+								Log.e(LOGTAG, "password=" + newPassword);
 
 								Editor editor = sharedPrefs.edit();
 								editor.putString(Constants.XMPP_USERNAME,
@@ -488,6 +498,7 @@ public class XmppManager {
 						xmppManager.reregisterAccount();
 						return;
 					}
+					//开始从新连接
 					xmppManager.startReconnectionThread();
 
 				} catch (Exception e) {
@@ -504,5 +515,13 @@ public class XmppManager {
 
 		}
 	}
+    class MyReconnectionServerReceiver extends BroadcastReceiver{
 
+		@Override
+		public void onReceive(Context context, Intent intent) {
+		     Log.e("xmpp", "服务端端了请求重新连接........");
+			
+		}
+    	
+    }
 }

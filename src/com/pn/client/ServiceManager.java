@@ -22,9 +22,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
 
 /** 
@@ -64,12 +61,13 @@ public final class ServiceManager {
             callbackActivityPackageName = callbackActivity.getPackageName();
             callbackActivityClassName = callbackActivity.getClass().getName();
         }
-              //  apiKey = getMetaDataValue("ANDROIDPN_API_KEY");
-//                Log.i(LOGTAG, "apiKey=" + apiKey);
-//                //        if (apiKey == null) {
-//                //            Log.e(LOGTAG, "Please set the androidpn api key in the manifest file.");
-//                //            throw new RuntimeException();
-//                //        }
+
+        //        apiKey = getMetaDataValue("ANDROIDPN_API_KEY");
+        //        Log.i(LOGTAG, "apiKey=" + apiKey);
+        //        //        if (apiKey == null) {
+        //        //            Log.e(LOGTAG, "Please set the androidpn api key in the manifest file.");
+        //        //            throw new RuntimeException();
+        //        //        }
 
         props = loadProperties();
         apiKey = props.getProperty("apiKey", "");
@@ -91,14 +89,15 @@ public final class ServiceManager {
         editor.putString(Constants.CALLBACK_ACTIVITY_CLASS_NAME,
                 callbackActivityClassName);
         editor.commit();
-       
         // Log.i(LOGTAG, "sharedPrefs=" + sharedPrefs.toString());
     }
 
     public void startService() {
+    	//正式开启服务
         Thread serviceThread = new Thread(new Runnable() {
             @Override
             public void run() {
+            	//开始服务，
                 Intent intent = NotificationService.getIntent();
                 context.startService(intent);
             }
@@ -111,31 +110,31 @@ public final class ServiceManager {
         context.stopService(intent);
     }
 
-//        private String getMetaDataValue(String name, String def) {
-//            String value = getMetaDataValue(name);
-//            return (value == null) ? def : value;
-//        }
-//    
-//        private String getMetaDataValue(String name) {
-//            Object value = null;
-//            PackageManager packageManager = context.getPackageManager();
-//            ApplicationInfo applicationInfo;
-//            try {
-//                applicationInfo = packageManager.getApplicationInfo(context
-//                        .getPackageName(), 128);
-//                if (applicationInfo != null && applicationInfo.metaData != null) {
-//                    value = applicationInfo.metaData.get(name);
-//                }
-//            } catch (NameNotFoundException e) {
-//                throw new RuntimeException(
-//                        "Could not read the name in the manifest file.", e);
-//            }
-//            if (value == null) {
-//                throw new RuntimeException("The name '" + name
-//                        + "' is not defined in the manifest file's meta data.");
-//            }
-//            return value.toString();
-//        }
+    //    private String getMetaDataValue(String name, String def) {
+    //        String value = getMetaDataValue(name);
+    //        return (value == null) ? def : value;
+    //    }
+    //
+    //    private String getMetaDataValue(String name) {
+    //        Object value = null;
+    //        PackageManager packageManager = context.getPackageManager();
+    //        ApplicationInfo applicationInfo;
+    //        try {
+    //            applicationInfo = packageManager.getApplicationInfo(context
+    //                    .getPackageName(), 128);
+    //            if (applicationInfo != null && applicationInfo.metaData != null) {
+    //                value = applicationInfo.metaData.get(name);
+    //            }
+    //        } catch (NameNotFoundException e) {
+    //            throw new RuntimeException(
+    //                    "Could not read the name in the manifest file.", e);
+    //        }
+    //        if (value == null) {
+    //            throw new RuntimeException("The name '" + name
+    //                    + "' is not defined in the manifest file's meta data.");
+    //        }
+    //        return value.toString();
+    //    }
 
     private Properties loadProperties() {
         //        InputStream in = null;

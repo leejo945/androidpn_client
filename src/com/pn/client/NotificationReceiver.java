@@ -42,13 +42,10 @@ public final class NotificationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.e("test", "NotificationReceiver.onReceive()...");
+        Log.d(LOGTAG, "NotificationReceiver.onReceive()...");
         String action = intent.getAction();
-        Log.e("test", "action=" + action);
+        Log.d(LOGTAG, "action=" + action);
 
-        
-        
-         //NotificationPacketListener  发送了ACTION_SHOW_NOTIFICATION
         if (Constants.ACTION_SHOW_NOTIFICATION.equals(action)) {
             String notificationId = intent
                     .getStringExtra(Constants.NOTIFICATION_ID);
@@ -61,14 +58,13 @@ public final class NotificationReceiver extends BroadcastReceiver {
             String notificationUri = intent
                     .getStringExtra(Constants.NOTIFICATION_URI);
 
-            Log.e("test", "notificationId=" + notificationId);
-            Log.e("test", "notificationApiKey=" + notificationApiKey);
-            Log.e("test", "notificationTitle=" + notificationTitle);
-            Log.e("test", "notificationMessage=" + notificationMessage);
-            Log.e("test", "notificationUri=" + notificationUri);
+            Log.d(LOGTAG, "notificationId=" + notificationId);
+            Log.d(LOGTAG, "notificationApiKey=" + notificationApiKey);
+            Log.d(LOGTAG, "notificationTitle=" + notificationTitle);
+            Log.d(LOGTAG, "notificationMessage=" + notificationMessage);
+            Log.d(LOGTAG, "notificationUri=" + notificationUri);
 
             Notifier notifier = new Notifier(context);
-        	Log.e("test", "我的notifier是空吗"+notifier);
             notifier.notify(notificationId, notificationApiKey,
                     notificationTitle, notificationMessage, notificationUri);
         }

@@ -27,6 +27,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -41,15 +43,14 @@ import android.util.Log;
  */
 public class NotificationService extends Service {
 
-    private static final String LOGTAG = "NotificationService";
+    private static final String LOGTAG = "xmpp";
 
     public static final String SERVICE_NAME = "org.androidpn.client.NotificationService";
 
     private TelephonyManager telephonyManager;
 
-    //    private WifiManager wifiManager;
-    //
-    //    private ConnectivityManager connectivityManager;
+       private WifiManager wifiManager;
+     private ConnectivityManager connectivityManager;
 
     private BroadcastReceiver notificationReceiver;
 
@@ -68,20 +69,8 @@ public class NotificationService extends Service {
     private SharedPreferences sharedPrefs;
 
     private String deviceId;
-//------------自己加入的，防止service被停止---------------------
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-    	// TODO Auto-generated method stub
-    	return super.onStartCommand(intent, flags, startId);
-    }
-    
-    
-//------------------------
-    
-    
-    
+
     public NotificationService() {
-    	Log.e(LOGTAG, "NotificationService构造器");
         notificationReceiver = new NotificationReceiver();
         connectivityReceiver = new ConnectivityReceiver(this);
         phoneStateListener = new PhoneStateChangeListener(this);
@@ -94,21 +83,24 @@ public class NotificationService extends Service {
     public void onCreate() {
         Log.d(LOGTAG, "onCreate()...");
         telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        // wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        // connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         sharedPrefs = getSharedPreferences(Constants.SHARED_PREFERENCE_NAME,
                 Context.MODE_PRIVATE);
 
         // Get deviceId
-        //获取手机的设备号码
         deviceId = telephonyManager.getDeviceId();
-      
+        Log.e(LOGTAG, "设备号码------------------------");
+        
+        Log.e(LOGTAG, "通过TelephonyManager获得" + deviceId);
+        Log.e(LOGTAG, "通过WifiManager获得物理地址---" + wifiManager.getConnectionInfo().getMacAddress());
+        Log.e(LOGTAG, "设备号码------------------------");
         Editor editor = sharedPrefs.edit();
         editor.putString(Constants.DEVICE_ID, deviceId);
         editor.commit();
 
-        // If running on an emulator  模拟器上
+        // If running on an emulator
         if (deviceId == null || deviceId.trim().length() == 0
                 || deviceId.matches("0+")) {
             if (sharedPrefs.contains("EMULATOR_DEVICE_ID")) {
@@ -122,10 +114,9 @@ public class NotificationService extends Service {
                 editor.commit();
             }
         }
-        Log.d(LOGTAG, "deviceId=" + deviceId);
-
         
-        //--------------
+        Log.e(LOGTAG, "设备号码....deviceId=" + deviceId);
+// 以上只是获取移动设备唯一的id
         xmppManager = new XmppManager(this);
 
         taskSubmitter.submit(new Runnable() {
@@ -135,16 +126,15 @@ public class NotificationService extends Service {
         });
     }
 
-   
-    //--------------自己从重新写得---------------
+    @Override
+    public void onStart(Intent intent, int startId) {
+        Log.d(LOGTAG, "onStart()...");
+    }
 
     @Override
     public void onDestroy() {
-    	  stop();
-    	 Intent intent = NotificationService.getIntent();
-        startService(intent);
         Log.d(LOGTAG, "onDestroy()...");
-      
+        stop();
     }
 
     @Override
@@ -211,8 +201,6 @@ public class NotificationService extends Service {
     }
 
     private void registerNotificationReceiver() {
-    	
-    	//这里动态注册Notification广播
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.ACTION_SHOW_NOTIFICATION);
         filter.addAction(Constants.ACTION_NOTIFICATION_CLICKED);
@@ -224,14 +212,8 @@ public class NotificationService extends Service {
         unregisterReceiver(notificationReceiver);
     }
 
-    /**
-     * 这个广播用来，判断网络的连接状况或者网络的改变等
-     */
-    
-    
     private void registerConnectivityReceiver() {
         Log.d(LOGTAG, "registerConnectivityReceiver()...");
-       
         telephonyManager.listen(phoneStateListener,
                 PhoneStateListener.LISTEN_DATA_CONNECTION_STATE);
         IntentFilter filter = new IntentFilter();
@@ -275,7 +257,7 @@ public class NotificationService extends Service {
             this.notificationService = notificationService;
         }
 
-      @SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         public Future submit(Runnable task) {
             Future result = null;
             if (!notificationService.getExecutorService().isTerminated()
@@ -318,8 +300,4 @@ public class NotificationService extends Service {
 
     }
 
-    
-    
-    
-    
 }

@@ -24,7 +24,7 @@ import android.util.Log;
 
 /** 
  * A broadcast receiver to handle the changes in network connectiion states.
- *   用于监听网络连接改变
+ *
  * @author Sehwan Noh (devnoh@gmail.com)
  */
 public class ConnectivityReceiver extends BroadcastReceiver {
@@ -40,9 +40,9 @@ public class ConnectivityReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.e("test", "ConnectivityReceiver.onReceive()...");
+        Log.d(LOGTAG, "ConnectivityReceiver.onReceive()...");
         String action = intent.getAction();
-         Log.e("test", "action=" + action);
+        Log.d(LOGTAG, "action=" + action);
 
         ConnectivityManager connectivityManager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
